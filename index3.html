@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +31,20 @@
             -webkit-text-fill-color: transparent;
             letter-spacing: 3px;
             animation: glow 1.5s infinite alternate;
+        }
+
+        h5 {
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #00ff88, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+            animation: glow 1.5s infinite alternate;
+            position: absolute;
+            top: 20px;
+            left: 30px;
         }
 
         @keyframes glow {
@@ -97,74 +112,62 @@
         }
     </style>
 </head>
+
 <body>
-
+    <h5>Vishesh Mishra</h5>
     <h1>The Butterfly Effect</h1>
-
     <canvas id="canvas"></canvas>
-
     <div class="controls">
         <label> e^cos(θ): <input type="number" id="a" value="1.4" step="0.1"> </label>
         <label> - 2cos(4θ): <input type="number" id="b" value="2.8" step="0.1"> </label>
         <label> + sin(θ/12)^5: <input type="number" id="c" value="1" step="0.1"> </label>
         <button onclick="restartAnimation()">Apply</button>
     </div>
-
     <script>
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
-    
         canvas.width = window.innerWidth * 0.8;
         canvas.height = window.innerHeight * 0.6;
-    
         let t = 0;
         let points = [];
         let animating = true;
-        let scaleFactor = 50; // Default scale
-    
+        let scaleFactor = 50;
+
         function getScaleFactor(a, b, c) {
-            return 100 / (Math.max(a, b, c) + 2);  // Adjusts based on highest value
+            return 100 / (Math.max(a, b, c) + 2);
         }
-    
+
         function butterflyCurve(theta, a, b, c) {
             let r = a * Math.exp(Math.cos(theta)) - b * Math.cos(4 * theta) + c * Math.pow(Math.sin(theta / 12), 5);
             let x = r * Math.sin(theta);
             let y = r * Math.cos(theta);
             return { x, y };
         }
-    
+
         function draw() {
             if (!animating) return;
-    
             let a = parseFloat(document.getElementById("a").value);
             let b = parseFloat(document.getElementById("b").value);
             let c = parseFloat(document.getElementById("c").value);
-    
             scaleFactor = getScaleFactor(a, b, c);
-    
             if (t > 12 * Math.PI) return;
-    
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.scale(scaleFactor, scaleFactor);
-    
             points.push(butterflyCurve(t, a, b, c));
-    
             ctx.strokeStyle = "hotpink";
             ctx.lineWidth = 0.05;
             ctx.beginPath();
-    
             for (let i = 0; i < points.length - 1; i++) {
                 ctx.moveTo(points[i].x, -points[i].y);
                 ctx.lineTo(points[i + 1].x, -points[i + 1].y);
             }
             ctx.stroke();
-    
             ctx.resetTransform();
             t += 0.05;
             requestAnimationFrame(draw);
         }
-    
+
         function restartAnimation() {
             t = 0;
             points = [];
@@ -172,10 +175,9 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             draw();
         }
-    
+
         draw();
     </script>
-    
-
 </body>
+
 </html>
